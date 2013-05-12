@@ -1,11 +1,7 @@
-## About CakePHP REST Plugin (1.3 tree)
+## CakePHP REST Plugin (1.3 tree-only)
 
 [CakePHP REST Plugin](http://kevin.vanzonneveld.net/techblog/article/cakephp_rest_plugin_presentation/)
-takes whatever your existing controller actions gather in viewvars,
-reformats it in json or xml, and outputs it to the client.
-Because you hook it into existing actions, you only have to write your
-features once, and this plugin will just unlock them as API.
-The plugin knows it's being called by looking at the extension in the url: `.json` or `.xml`.
+takes whatever your existing controller actions gather in viewvars, reformats it in json or xml, and outputs it to the client. Because you hook it into existing actions, you only have to write your features once, and this plugin will just unlock them as API. The plugin knows it's being called by looking at the extension in the url: `.json` or `.xml`.
 
 So, if you've already coded:
 
@@ -18,13 +14,9 @@ You can have:
 
 ..up & running in no time.
 
-CakePHP REST Plugin can even change the structure of your existing viewvars
-using bi-directional xpaths. This way you can extract info using an xpath, and
-output it to your API clients using another xpath. If this doesn't make any
-sense, please have a look at the examples.
+CakePHP REST Plugin can even change the structure of your existing viewvars using bi-directional xpaths. This way you can extract info using an xpath, and output it to your API clients using another xpath. If this doesn't make any sense, please have a look at the examples.
 
-You attach the `Rest.Rest` component to a controller, but you can limit REST
-activity to a single action.
+You attach the `Rest.Rest` component to a controller, but you can limit REST activity to a single action.
 
 For best results, 2 changes to your application have to be made:
 
@@ -37,6 +29,11 @@ Tested with:
 
  - CakePHP 1.2
  - CakePHP 1.3
+
+### Friendly "its a fork" Warning
+
+This repository is the CakePHP 1.x version and a fork from 
+[kvz/cakephp-rest-plugin](https://github.com/kvz/cakephp-rest-plugin). The version from @kvz already has support for CakePHP 2.x, but i do not plan to follow. If you need this plugin for a 2.x project i recommend to look there.
 
 ### Resources
 
@@ -51,9 +48,7 @@ I held a presentation on this plugin during the first Dutch CakePHP meetup:
 
 - [REST presentation at slideshare](http://www.slideshare.net/kevinvz/rest-presentation-2901872)
 
-I'm writing a client side API that talks to this plugin for the company I work for.
-If you're looking to provide your customers with something similar,
-it may be helpful to [have a look at it](http://github.com/true/true-api).
+I'm writing a client side API that talks to this plugin for the company I work for. If you're looking to provide your customers with something similar, it may be helpful to [have a look at it](http://github.com/true/true-api).
 
 ### Leave comments
 
@@ -102,8 +97,7 @@ Do you run Apache? Make your `app/webroot/.htaccess` look like so:
         RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization},last]
     </IfModule>
 
-In my experience Nginx & FastCGI already make the HTTP_AUTHORIZATION available
-which is used to parse credentials for authentication.
+In my experience Nginx & FastCGI already make the HTTP_AUTHORIZATION available which is used to parse credentials for authentication.
 
 ## Implementation
 
@@ -213,21 +207,19 @@ And when asked for the xml version, Rest Plugin would return this to your client
     </tweets_response>
 ```
 
-As you can see, the controller name + response is always the root element (for json there is no root element).
-Then the content is divived in `meta` & `data`, and the latter is where your actual viewvars are stored.
-Meta is there to show any information regarding the validity of the request & response.
+As you can see, the controller name + response is always the root element (for json there is no root element). Then the content is divived in `meta` & `data`, and the latter is where your actual viewvars are stored. Meta is there to show any information regarding the validity of the request & response.
 
 ### Authorization
 
 Check the HTTP header as shown [here](http://docs.amazonwebservices.com/AmazonS3/latest/dev/index.html?RESTAuthentication.html)
-You can control the `authKeyword` setting to control what keyword belongs to
-your REST API. By default it uses: TRUEREST. Have your users supply a header like:
+
+You can control the `authKeyword` setting to control what keyword belongs to your REST API. By default it uses: TRUEREST. Have your users supply a header like:
+
 `Authorization: TRUEREST username=john&password=xxx&apikey=247b5a2f72df375279573f2746686daa`
 
-Now, inside your controller these variables will be available by calling
-`$this->Rest->credentials()`.
-This plugin only handles the parsing of the header, and passes the info on to your app.
-So login anyone with e.g. `$this->Auth->login()` and the information you retrieved from `$this->Rest->credentials()`;
+Now, inside your controller these variables will be available by calling `$this->Rest->credentials()`.
+
+This plugin only handles the parsing of the header, and passes the info on to your app. So login anyone with e.g. `$this->Auth->login()` and the information you retrieved from `$this->Rest->credentials()`;
 
 Example:
 
@@ -256,8 +248,7 @@ Example:
 
 ### Schema
 
-If you're going to make use of this plugin's Logging & Ratelimitting (default) and you
-should run the database schema found in: `config/schema/rest_logs.sql`.
+If you're going to make use of this plugin's Logging & Ratelimitting (default) and you should run the database schema found in: `config/schema/rest_logs.sql`.
 
 ### Router
 
@@ -324,9 +315,7 @@ If the resolved callback is a string we assume it's a method in the calling cont
 [Chris Toppon](http://www.supermethod.com/) there
 now also is [JSONP](http://en.wikipedia.org/wiki/JSON#JSONP) support out of the box.
 
-No extra PHP code or configuration is required on the server side with this patch,
-just supply either the parameter `callback` or `jsoncallback` to the JSON url
-provided by your plugin and the output will be wrapped in mycallback as a function.
+No extra PHP code or configuration is required on the server side with this patch, just supply either the parameter `callback` or `jsoncallback` to the JSON url provided by your plugin and the output will be wrapped in mycallback as a function.
 
 For example:
 
