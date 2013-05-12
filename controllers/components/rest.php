@@ -842,9 +842,11 @@ Class RestComponent extends Object {
 		if (!empty($this->_settings['version'])) {
 			$response['meta']['version'] = $this->_settings['version'];
 		}
-
-		foreach ($this->_settings['auth']['fields'] as $field) {
-			$response['meta']['credentials'][$field] = $this->credentials($field);
+		
+		if (!empty($this->_settings['auth'])) {
+			foreach ($this->_settings['auth']['fields'] as $field) {
+				$response['meta']['credentials'][$field] = $this->credentials($field);
+			}
 		}
 
 		if (!empty($this->_settings['log']['dump'])) {
