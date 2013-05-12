@@ -696,6 +696,7 @@ Class RestComponent extends Object {
 				}
 			}
 			
+			
 			if (empty($this->Controller->params['url']['ext'])) {
 				$this->Controller->params['url']['ext'] = 'html';
 			}
@@ -844,8 +845,8 @@ Class RestComponent extends Object {
 		}
 		
 		if (!empty($this->_settings['auth'])) {
-			foreach ($this->_settings['auth']['fields'] as $field) {
-				$response['meta']['credentials'][$field] = $this->credentials($field);
+			foreach ($this->_settings['auth']['fields'] as $field => $remoteField) {
+				$response['meta']['credentials'][$field] = $this->credentials($remoteField);
 			}
 		}
 
