@@ -915,7 +915,7 @@ Class RestComponent extends Object {
 		}
 
 		if (!$this->isActive()) {
-			return true;
+			return $url;
 		}
 		$redirect = true;
 		$this->abort(compact('url', 'status', 'exit', 'redirect'));
