@@ -695,7 +695,11 @@ Class RestComponent extends Object {
 					$isActive = false;
 				}
 			}
-
+			
+			if (empty($this->Controller->params['url']['ext'])) {
+				$this->Controller->params['url']['ext'] = 'html';
+			}
+			
 			if (!isset($isActive)) {
 				$isActive = in_array(
 					$this->Controller->params['url']['ext'],
