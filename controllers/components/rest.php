@@ -523,11 +523,18 @@ Class RestComponent extends Object {
 				}
 				$str = join(' ', $parts);
 				parse_str($str, $this->_credentials);
-
+				
+				if (!empty($this->_settings['auth'])) {
+					foreach ($this->_settings['auth']['fields'] as $field => $remoteField) {
+						$this->_credentials[$field] = $this->_credentials[$remoteField];
+						unset($this->_credentials[$remoteField]);
+					}
+				}
+				
 				$this->log(array(
-					'username' => $this->_credentials[$this->_settings['auth']['fields']['username']],
-					'apikey' => $this->_credentials[$this->_settings['auth']['fields']['apikey']],
-					'class' => $this->_credentials[$this->_settings['auth']['fields']['class']],
+					'username' => $this->_credentials['username'],
+					'apikey' => $this->_credentials['apikey'],
+					'class' => $this->_credentials['class'],
 				));
 			}
 
@@ -845,8 +852,8 @@ Class RestComponent extends Object {
 		}
 		
 		if (!empty($this->_settings['auth'])) {
-			foreach ($this->_settings['auth']['fields'] as $field => $remoteField) {
-				$response['meta']['credentials'][$field] = $this->credentials($remoteField);
+			foreach ($this->_settings['auth']['fields'] as $field => $rfield) {
+				$response['meta']['credentials'][$rfield] = $this->credentials($field);
 			}
 		}
 
