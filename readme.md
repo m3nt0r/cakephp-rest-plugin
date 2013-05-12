@@ -1,4 +1,4 @@
-## About CakePHP REST Plugin
+## About CakePHP REST Plugin (1.3 tree)
 
 [CakePHP REST Plugin](http://kevin.vanzonneveld.net/techblog/article/cakephp_rest_plugin_presentation/)
 takes whatever your existing controller actions gather in viewvars,
