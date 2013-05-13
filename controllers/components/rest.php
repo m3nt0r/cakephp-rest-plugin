@@ -146,6 +146,7 @@ Class RestComponent extends Object {
 		),
 		'debug' => 0,
 		'JSONP' => false,
+		'warnInactive' => true,
 		'onlyActiveWithAuth' => false,
 		'catchredir' => false,
 		'ratelimiter' => true
@@ -880,7 +881,7 @@ Class RestComponent extends Object {
 	 */
 	public function View ($object = true, $ext = null) {
 		if (!$this->isActive()) {
-			if ($this->_settings['onlyActiveWithAuth']) {
+			if ($this->_settings['onlyActiveWithAuth'] && $this->_settings['warnInactive']) {
 				$this->warning('REST is not active. Maybe try correct extension.');
 			} else {
 				$this->abort('REST is not active. Maybe try correct extension.');
