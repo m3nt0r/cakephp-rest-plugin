@@ -145,6 +145,7 @@ Class RestComponent extends Object {
 			'extract' => array(),
 		),
 		'debug' => 0,
+		'JSONP' => false,
 		'onlyActiveWithAuth' => false,
 		'catchredir' => false,
 		'ratelimiter' => true
@@ -154,10 +155,11 @@ Class RestComponent extends Object {
 	public function initialize (&$Controller, $settings = array()) {
 		$this->Controller = $Controller;
 		$this->_settings  = am($this->_settings, $settings);
-
+		
 		if (!$this->isActive()) {
 			return;
 		}
+		
 		// Control Debug
 		$this->_settings['debug'] = (int)$this->_settings['debug'];
 		Configure::write('debug', $this->_settings['debug']);
@@ -178,7 +180,7 @@ Class RestComponent extends Object {
 			'ip' => $_SERVER['REMOTE_ADDR'],
 			'httpcode' => 200,
 		));
-
+		
 		// Validate & Modify Post
 		$this->postData = $this->_modelizePost($this->Controller->data);
 		if ($this->postData === false) {
@@ -248,10 +250,10 @@ Class RestComponent extends Object {
 	 * @return <type>
 	 */
 	public function startup (&$Controller) {
-		if (!$this->isActive()) {
+		if (!$this->isActive()) {	
 			return;
 		}
-
+		
 		// Rate Limit
 		if ($this->_settings['ratelimiter']) {		
 			$credentials = $this->credentials();
@@ -665,16 +667,16 @@ Class RestComponent extends Object {
 		if (!$ext) {
 			$ext = $this->Controller->params['url']['ext'];
 		}
-
+		
+		
 		// Don't know why,  but RequestHandler isn't settings
 		// Content-Type right;  so using header() for now instead
 		switch ($ext) {
 			case 'json':
-				// text/javascript
-				// application/json
 				if ($this->_settings['debug'] < 3) {
-					header('Content-Type: text/javascript');
-					$this->Controller->RequestHandler->setContent('json', 'text/javascript');
+					$jsonMime = ($this->_settings['JSONP'] ? 'text/javascript' : 'application/json');
+					header('Content-Type: ' . $jsonMime );
+					$this->Controller->RequestHandler->setContent('json', $jsonMime);
 					$this->Controller->RequestHandler->respondAs('json');
 				}
 				break;
@@ -703,7 +705,6 @@ Class RestComponent extends Object {
 				}
 			}
 			
-			
 			if (empty($this->Controller->params['url']['ext'])) {
 				$this->Controller->params['url']['ext'] = 'html';
 			}
@@ -715,6 +716,7 @@ Class RestComponent extends Object {
 				);
 			}
 		}
+		
 		return $isActive;
 	}
 	public function validate ($format, $arg1 = null, $arg2 = null) {
@@ -878,11 +880,13 @@ Class RestComponent extends Object {
 	 */
 	public function View ($object = true, $ext = null) {
 		if (!$this->isActive()) {
-			return $this->abort(
-				'Rest not activated. Maybe try correct extension.'
-			);
+			if ($this->_settings['onlyActiveWithAuth']) {
+				$this->warning('REST is not active. Maybe try correct extension.');
+			} else {
+				$this->abort('REST is not active. Maybe try correct extension.');
+			}
 		}
-
+		
 		if ($ext === null) {
 			$ext = $this->Controller->params['url']['ext'];
 		}
@@ -966,6 +970,7 @@ Class RestComponent extends Object {
 		$this->Controller->header(sprintf('HTTP/1.1 %s %s', $code, $this->codes[$code]));
 
 		$this->headers();
+
 		$encoded = $this->View()->encode($this->response($data));
 
 		// Die.. ugly. but very safe. which is what we need
