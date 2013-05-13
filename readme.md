@@ -33,7 +33,7 @@ Tested with:
 ### Friendly "its a fork" Warning
 
 This repository is the CakePHP 1.x version and a fork from 
-[kvz/cakephp-rest-plugin](https://github.com/kvz/cakephp-rest-plugin). The version from @kvz already has support for CakePHP 2.x, but i do not plan to follow. If you need this plugin for a 2.x project i recommend to look there.
+[kvz/cakephp-rest-plugin](https://github.com/kvz/cakephp-rest-plugin). The version from [@kvz](https://twitter.com/kvz) already has support for CakePHP 2.x, but i do not plan to follow. If you need this plugin for a 2.x project i recommend to look there.
 
 ### Resources
 
@@ -105,8 +105,8 @@ In my experience Nginx & FastCGI already make the HTTP_AUTHORIZATION available w
 
 Beware that you can no longer use ->render() yourself
 
-```php
-    <?php
+```
+<?php
     class ServersController extends AppController {
         public $components = array(
             'RequestHandler',
@@ -135,7 +135,6 @@ Beware that you can no longer use ->render() yourself
             return !empty($this->Rest) && is_object($this->Rest) && $this->Rest->isActive();
         }
     }
-    ?>
 ```
 
 `extract` extracts variables you have in: `$this->viewVars`
@@ -144,8 +143,8 @@ the name you specify in the value part.
 
 Here's a more simple example of how you would use the viewVar `tweets` **as-is**:
 
-```php
-    <?php
+```
+<?php
     class TweetsController extends AppController {
         public $components = array (
             'Rest.Rest' => array(
@@ -165,7 +164,7 @@ Here's a more simple example of how you would use the viewVar `tweets` **as-is**
 
 And when asked for the xml version, Rest Plugin would return this to your clients:
 
-```xml
+```
     <?xml version="1.0" encoding="utf-8"?>
     <tweets_response>
       <meta>
@@ -223,7 +222,7 @@ This plugin only handles the parsing of the header, and passes the info on to yo
 
 Example:
 
-```php
+```
     public function beforeFilter () {
         if (!$this->Auth->user()) {
             // Try to login user via REST
@@ -252,7 +251,7 @@ If you're going to make use of this plugin's Logging & Ratelimitting (default) a
 
 ### Router
 
-```php
+```
     // Add an element for each controller that you want to open up
     // in the REST API
     Router::mapResources(array('servers'));
@@ -263,10 +262,9 @@ If you're going to make use of this plugin's Logging & Ratelimitting (default) a
 
 ### Callbacks
 
-If you're using the built-in ratelimiter, you may still want a little control yourself.
-I provide that in the form of 4 callbacks:
+If you're using the built-in ratelimiter, you may still want a little control yourself. I provide that in the form of 4 callbacks:
 
-```php
+```
     public function restlogBeforeSave ($Rest) {}
     public function restlogAfterSave ($Rest) {}
     public function restlogBeforeFind ($Rest) {}
@@ -275,22 +273,20 @@ I provide that in the form of 4 callbacks:
 
 That will be called in you AppController if they exists.
 
-You may want to give a specific user a specific ratelimit. In that case you can use
-the following callback in your User Model:
+You may want to give a specific user a specific ratelimit. In that case you can use the following callback in your User Model:
 
-```php
+```
     public function restRatelimitMax ($Rest, $credentials = array()) { }
 ```
 
-And for that user the return value of the callback will be used instead of the general
-class limit you could have specified in the settings.
+And for that user the return value of the callback will be used instead of the general class limit you could have specified in the settings.
 
 ### Customizing callback
 
 You can map callbacks to different places using the `callbacks` setting like so:
 
-```php
-    <?php
+```
+<?php
     class ServersController extends AppController {
         public $components = array(
             'Rest.Rest' => array(
@@ -312,8 +308,7 @@ If the resolved callback is a string we assume it's a method in the calling cont
 ### JSONP support
 
 [Thanks to](https://github.com/kvz/cakephp-rest-plugin/pull/3#issuecomment-883201)
-[Chris Toppon](http://www.supermethod.com/) there
-now also is [JSONP](http://en.wikipedia.org/wiki/JSON#JSONP) support out of the box.
+[Chris Toppon](http://www.supermethod.com/) there now also is [JSONP](http://en.wikipedia.org/wiki/JSON#JSONP) support out of the box.
 
 No extra PHP code or configuration is required on the server side with this patch, just supply either the parameter `callback` or `jsoncallback` to the JSON url provided by your plugin and the output will be wrapped in mycallback as a function.
 
