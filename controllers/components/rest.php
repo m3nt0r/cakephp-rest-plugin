@@ -255,13 +255,17 @@ Class RestComponent extends Object {
 			return;
 		}
 		
-		// Rate Limit
-		if ($this->_settings['ratelimiter']) {		
+		// Ratelimiter
+		if ($this->_settings['ratelimiter']) {
+			
 			$credentials = $this->credentials();
-			$class		 = @$credentials['class'];
+			$class = @$credentials['class'];
+			
 			if (!$class) {
 				$this->warning('Unable to establish class');
-			} else {
+			} 
+			elseif (isset($this->_settings['ratelimit']['classlimits'][$class])) 
+			{
 				list($time, $max) = $this->_settings['ratelimit']['classlimits'][$class];
 
 				$cbMax = $this->cbRestRatelimitMax($credentials);
@@ -281,9 +285,9 @@ Class RestComponent extends Object {
 				}
 			}
 		}
+		
+		// Views
 		if ($this->_settings['viewsFromPlugin']) {
-			// Setup the controller so it can use
-			// the view inside this plugin
 			$this->Controller->view = 'Rest.' . $this->View(false);
 		}
 	}
@@ -535,9 +539,9 @@ Class RestComponent extends Object {
 				}
 				
 				$this->log(array(
-					'username' => $this->_credentials['username'],
-					'apikey' => $this->_credentials['apikey'],
-					'class' => $this->_credentials['class'],
+					'username' => @$this->_credentials['username'],
+					'apikey' => @$this->_credentials['apikey'],
+					'class' => @$this->_credentials['class'],
 				));
 			}
 
