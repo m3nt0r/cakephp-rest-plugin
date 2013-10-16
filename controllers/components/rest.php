@@ -167,7 +167,7 @@ Class RestComponent extends Object {
 		$this->Controller->set('debug', $this->_settings['debug']);
 
 		// Set credentials
-		$this->credentials(true);
+		$this->credentials( true );
 
 		// Prepare log
 		$this->log(array(
@@ -519,13 +519,14 @@ Class RestComponent extends Object {
 		if ($set === false) {
 			return $this->_credentials;
 		}
-
+		
 		// Set credentials
 		if ($set === true) {
 			if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
 				$parts = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
 				$match = array_shift($parts);
 				if ($match !== $this->_settings['auth']['keyword']) {
+					$this->info('bad_header');
 					return false;
 				}
 				$str = join(' ', $parts);
@@ -847,7 +848,7 @@ Class RestComponent extends Object {
 				'status' => $status,
 				'feedback' => $feedback,
 				'request' => $server,
-				'credentials' => array(),
+				//'credentials' => array(),
 				'time_epoch' => gmdate('U', $time),
 				'time_local' => date('r', $time),
 			),
@@ -858,11 +859,12 @@ Class RestComponent extends Object {
 			$response['meta']['version'] = $this->_settings['version'];
 		}
 		
+		/*
 		if (!empty($this->_settings['auth'])) {
 			foreach ($this->_settings['auth']['fields'] as $field => $rfield) {
 				$response['meta']['credentials'][$rfield] = $this->credentials($field);
 			}
-		}
+		}*/
 
 		if (!empty($this->_settings['log']['dump'])) {
 			$this->log(array(
